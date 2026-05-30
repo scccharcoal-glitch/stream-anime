@@ -1,7 +1,17 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'www.stream-anime.org',
+        pathname: '/wp-content/uploads/**',
+      },
+    ],
+    // Allow unoptimized for Thai-character URLs as fallback
+    unoptimized: false,
+  },
+}
 
-export default nextConfig;
+export default nextConfig
