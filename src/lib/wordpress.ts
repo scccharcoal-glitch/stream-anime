@@ -167,6 +167,40 @@ export function getMangaCover(manga: WPManga) {
   return { url, alt: media.alt_text || manga.title.rendered }
 }
 
+// ─── Manga Chapters ──────────────────────────────────────────────────────────
+// ใช้ custom endpoint /wp-json/manga/v1/ (สร้างผ่าน WPCode snippet)
+
+export interface WPChapter {
+  id: number
+  slug: string
+  date: string
+  title: string          // plain string (ไม่ใช่ { rendered })
+  parent: number
+  chapter_images: Array<{ chapter_img: string }>
+  storage: string
+}
+
+/** ดึง chapters ทั้งหมดของ manga (เรียง ASC ตาม menu_order) */
+export async function getChapters(mangaId: number): Promise<WPChapter[]> {
+  const res = await fetch(
+    `https://www.stream-anime.org/wp-json/manga/v1/chapters/${mangaId}`,
+    { next: { revalidate: 3600 } }
+  )
+  if (!res.ok) return []
+  const data = await res.json()
+  return Array.isArray(data) ? data : []
+}
+
+/** ดึง chapter เดียวจาก slug */
+export async function getChapterBySlug(slug: string): Promise<WPChapter | null> {
+  const res = await fetch(
+    `https://www.stream-anime.org/wp-json/manga/v1/chapter/${encodeURIComponent(slug)}`,
+    { next: { revalidate: 3600 } }
+  )
+  if (!res.ok) return null
+  return res.json()
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function decodeHtml(html: string) {

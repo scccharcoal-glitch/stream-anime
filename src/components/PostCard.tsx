@@ -35,7 +35,7 @@ export default function PostCard({ post }: PostCardProps) {
               href={`/category/${cat.slug}`}
               className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full hover:bg-red-200 transition-colors"
             >
-              {cat.name}
+              {decodeHtml(cat.name)}
             </Link>
           ))}
         </div>
